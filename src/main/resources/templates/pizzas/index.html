@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/font-awesome/7.0.0/css/all.min.css}"
+    />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>La mia pizzeria</title>
+  </head>
+  <body>
+    <header>
+      <th:block th:fragment="navbar">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+          <div class="container-fluid">
+            <a class="navbar-brand" th:href="@{/}">
+              <h2>La mia pizzeria</h2>
+            </a>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item btn">
+                  <a th:href="@{/}" aria-current="page" class="nav-link">
+                    Home
+                  </a>
+                </li>
+                <li class="nav-item btn">
+                  <a class="nav-link" aria-current="page" th:href="@{/pizzas}"
+                    >Tutte le Pizze</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </th:block>
+    </header>
+
+    <main class="container">
+      <h1 class="text-center my-3">Le nostre pizze</h1>
+      <div class="d-flex justify-content-between">
+        <form method="get" th:action="@{/pizzas/searchByName}">
+          <input
+            type="text"
+            name="name"
+            th:value="${search}"
+            placeholder="Cerca per nome..."
+            class="form-control d-inline w-auto"
+          />
+          <button type="submit" class="btn btn-primary mb-1">Cerca</button>
+        </form>
+        <a th:href="@{pizzas/create}" class="btn btn-success mb-1"
+          >Aggiungi una pizza</a
+        >
+      </div>
+
+      <div class="row g-3">
+        <div
+          class="col-4"
+          th:if="${pizzas.size() > 0}"
+          th:each="pizza : ${pizzas}"
+          th:object="${pizza}"
+        >
+          <div class="card">
+            <img th:src="*{img}" th:alt="*{name}" class="card-img-top" />
+            <div class="card-body">
+              <h5 class="card-title" th:text="*{name}"></h5>
+              <p class="card-text" th:text="'Prezzo: ' + *{price} + '€'"></p>
+              <!-- DA SISTEMARE PER SHOW -->
+              <div class="d-flex justify-content-between">
+                <div>
+                  <a
+                    th:href="@{'/pizzas/' + ${pizza.id}}"
+                    class="btn btn-primary"
+                  >
+                    <i class="fa fa-pizza-slice"></i>
+                  </a>
+                </div>
+                <div>
+                  <a
+                    th:href="@{'/pizzas/edit/' + ${pizza.id}}"
+                    class="btn btn-success"
+                  >
+                    <i class="fa fa-pen"></i>
+                  </a>
+                </div>
+                <div>
+                  <form
+                    method="post"
+                    th:action="@{'/pizzas/delete/' + ${pizza.id}}"
+                  >
+                    <!-- <button class="btn btn-danger">
+                      <i class="fa fa-trash"></i>
+                    </button> -->
+                    <button
+                      type="button"
+                      class="btn btn-danger"
+                      data-bs-toggle="modal"
+                      th:attr="data-bs-target='#modal-delete-' + ${pizza.id}"
+                    >
+                      <i class="fa fa-trash"></i>
+                    </button>
+
+                    <!-- Modal -->
+                    <div
+                      class="modal fade"
+                      th:id="'modal-delete-' + ${pizza.id}"
+                      tabindex="-1"
+                      aria-labelledby="exampleModalLabel"
+                      aria-hidden="true"
+                    >
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">
+                              Conferma eliminazione
+                            </h1>
+                            <button
+                              type="button"
+                              class="btn-close"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div class="modal-body">
+                            Sei sicuro di voler eliminare questa pizza?
+                          </div>
+                          <div class="modal-footer">
+                            <button
+                              type="button"
+                              class="btn btn-secondary"
+                              data-bs-dismiss="modal"
+                            >
+                              Annulla
+                            </button>
+                            <button type="submit" class="btn btn-danger">
+                              Elimina
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table></table>
+
+      <p
+        th:unless="${pizzas.size() > 0}"
+        th:text="'Non ci sono pizze disponibili al momento.'"
+        class="text-center py-5"
+      ></p>
+    </main>
+    <script
+      th:src="@{/webjars/bootstrap/5.3.8/js/bootstrap.bundle.min.js}"
+    ></script>
+  </body>
+</html>

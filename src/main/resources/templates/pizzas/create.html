@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}"
+    />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>La mia pizzeria</title>
+  </head>
+  <body>
+    <header class="pb-3">
+      <div th:insert="pizzas/index :: navbar"></div>
+    </header>
+    <main>
+        <div class="container my-5">
+            <h1 class="text-center mb-5">Aggiungi una pizza</h1>
+
+            <div class="row">
+                <div class="col-12">
+                    <form th:object="${pizza}" th:action="@{/pizzas/create}" method="post">
+                        <!-- CREA INPUT PER VALORI DELLA PIZZA -->
+                        <label class="form-label" for="name">Nome pizza</label>
+                        <input class="form-control mb-4" id="name" th:field="*{name}" type="text" required th:errorClass="is-invalid">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('name')}">
+                          <ul>
+                            <li  th:each="error : ${#fields.errors('name')}" th:text="${error}"></li>
+                          </ul>
+                        </div>
+
+                        <label class="form-label" for="description">Descrizione pizza</label>
+                        <textarea class="form-control mb-4" id="description" th:field="*{description}" type="text" required th:errorClass="is-invalid"></textarea>
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('description')}">
+                          <ul>
+                            <li  th:each="error : ${#fields.errors('description')}" th:text="${error}"></li>
+                          </ul>
+                        </div>
+
+                        <label class="form-label" for="price">Prezzo pizza</label>
+                        <input class="form-control mb-4" id="price" th:field="*{price}" type="number" min="0" step="any" required th:errorClass="is-invalid">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('price')}">
+                          <ul>
+                            <li  th:each="error : ${#fields.errors('price')}" th:text="${error}"></li>
+                          </ul>
+                        </div>
+
+                        <label class="form-label" for="img">URL all'immagine pizza</label>
+                        <input class="form-control mb-4" id="img" th:field="*{img}" type="text" required th:errorClass="is-invalid">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('img')}">
+                          <ul>
+                            <li  th:each="error : ${#fields.errors('img')}" th:text="${error}"></li>
+                          </ul>
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary mt-2">Aggiungi</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</html>
+    

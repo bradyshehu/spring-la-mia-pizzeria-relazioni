@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}"
+    />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>La mia pizzeria</title>
+  </head>
+  <body>
+    <header class="pb-3">
+      <div th:insert="pizzas/index :: navbar"></div>
+    </header>
+    <main>
+        <div class="container my-5" th:object="${offer}">
+            <h1 class="text-center mb-5">Aggiungi una offerta per [[${offer.pizza.name}]]</h1>
+
+            <div class="row">
+                <div class="col-12">
+                    <form th:action="${edit} ? @{|/offers/edit/${offer.id}|} : @{/offers/create}" method="post">
+
+                        <!-- DATI NASCOSTI DEL LIBRO -->
+                         <input type="hidden" th:field="*{pizza}" />
+                        <!-- CREA INPUT PER VALORI DELL'OFFERTA -->
+                        <label class="form-label" for="title">Titolo offerta</label>
+                        <input class="form-control mb-4" id="title" th:field="*{title}" type="text" required th:errorClass="is-invalid">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}">
+                          <ul>
+                            <li  th:each="error : ${#fields.errors('title')}" th:text="${error}"></li>
+                          </ul>
+                        </div>
+                        <!-- DATA INIZIO -->
+                        <label class="form-label" for="start">Data d'inizio dell'offerta</label>
+                        <input class="form-control mb-4" id="start" th:field="*{start}" type="date" required th:errorClass="is-invalid">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('start')}">
+                          <ul>
+                            <li  th:each="error : ${#fields.errors('start')}" th:text="${error}"></li>
+                          </ul>
+                        </div>
+                        <!-- DATA FINE -->
+                        <label class="form-label" for="end">Data di fine dell'offerta</label>
+                        <input class="form-control mb-4" id="end" th:field="*{end}" type="date" required th:errorClass="is-invalid">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('end')}">
+                          <ul>
+                            <li  th:each="error : ${#fields.errors('end')}" th:text="${error}"></li>
+                          </ul>
+                        </div>
+                        <!-- PERCENTUALE SCONTO -->
+                        <label class="form-label" for="percentage">Percentuale dell'offerta</label>
+                        <input class="form-control mb-4" id="percentage" th:field="*{percentage}" type="number" min="0" max="100" required th:errorClass="is-invalid">
+                        <div class="invalid-feedback" th:if="${#fields.hasErrors('percentage')}">
+                          <ul>
+                            <li  th:each="error : ${#fields.errors('percentage')}" th:text="${error}"></li>
+                          </ul>
+                        </div>
+
+
+                        <button type="submit" class="btn btn-primary mt-2">Aggiungi</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+</html>
+    

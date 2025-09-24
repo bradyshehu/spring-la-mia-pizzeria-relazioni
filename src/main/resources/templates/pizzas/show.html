@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/font-awesome/7.0.0/css/all.min.css}"
+    />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>La mia pizzeria</title>
+  </head>
+  <body>
+    <header class="pb-3">
+      <div th:insert="pizzas/index :: navbar"></div>
+    </header>
+    <main>
+      <div class="container text-center" th:object="${pizza}">
+        <h3 class="py-3" th:text="*{name}"></h3>
+        <img class="py-3" th:src="*{img}" alt="*{name}" />
+        <ul>
+          <li class="py-3" th:text="*{description}"></li>
+          <li class="py-3" th:text="*{price} + '€'"></li>
+        </ul>
+
+        <section class="row justify-content-center py-5 text-start">
+          <div class="col-12">
+            <div class="d-flex justify-content-between">
+              <h1 class="mb-3">Le offerte della [[*{name}]]</h1>
+              <div class="py-1">
+                <a
+                  th:href="@{|/pizzas/${pizza.id}/offers|}"
+                  class="btn btn-primary"
+                  >Aggiungi una nuova offerta</a
+                >
+              </div>
+            </div>
+            <div th:unless="${pizza.offers.size() > 0}">
+              <p class="alert">Non ci sono offerte per questa pizza</p>
+            </div>
+            <div th:if="${pizza.offers.size() > 0}">
+              <table class="table">
+                <thead class="thead">
+                  <tr>
+                    <th>Titolo</th>
+                    <th>Data inizio</th>
+                    <th>Data fine</th>
+                    <th>Percentuale di sconto</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr th:each="offer : ${pizza.offers}" th:object="${offer}">
+                    <td th:text="*{title}"></td>
+                    <td th:text="*{start}"></td>
+                    <td th:text="*{end}"></td>
+                    <td th:text="*{percentage} + '%'"></td>
+                    <td>
+                      <a
+                        class="btn btn-success"
+                        th:href="@{|/offers/edit/${offer.id}|}"
+                      >
+                        <i class="fa fa-pen"></i>
+                      </a>
+                    </td>
+                    <td>
+                      <form
+                        method="post"
+                        th:action="@{'/offers/delete/' + ${offer.id}}"
+                      >
+                        <!-- <button class="btn btn-danger">
+                      <i class="fa fa-trash"></i>
+                    </button> -->
+                        <button
+                          type="button"
+                          class="btn btn-danger"
+                          data-bs-toggle="modal"
+                          th:attr="data-bs-target='#modal-delete-' + ${offer.id}"
+                        >
+                          <i class="fa fa-trash"></i>
+                        </button>
+
+                        <!-- Modal -->
+                        <div
+                          class="modal fade"
+                          th:id="'modal-delete-' + ${offer.id}"
+                          tabindex="-1"
+                          aria-labelledby="exampleModalLabel"
+                          aria-hidden="true"
+                        >
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h1
+                                  class="modal-title fs-5"
+                                  id="exampleModalLabel"
+                                >
+                                  Conferma eliminazione offerta
+                                </h1>
+                                <button
+                                  type="button"
+                                  class="btn-close"
+                                  data-bs-dismiss="modal"
+                                  aria-label="Close"
+                                ></button>
+                              </div>
+                              <div class="modal-body">
+                                Sei sicuro di voler eliminare questa offerta?
+                              </div>
+                              <div class="modal-footer">
+                                <button
+                                  type="button"
+                                  class="btn btn-secondary"
+                                  data-bs-dismiss="modal"
+                                >
+                                  Annulla
+                                </button>
+                                <button type="submit" class="btn btn-danger">
+                                  Elimina
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </form>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </main>
+    <script
+      th:src="@{/webjars/bootstrap/5.3.8/js/bootstrap.bundle.min.js}"
+    ></script>
+  </body>
+</html>
