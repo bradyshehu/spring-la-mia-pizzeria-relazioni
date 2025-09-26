@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.lessons.java.spring_la_mia_pizzeria_crud.models.Pizza;
 import org.lessons.java.spring_la_mia_pizzeria_crud.models.Offer;
+import org.lessons.java.spring_la_mia_pizzeria_crud.repository.IngredientRepository;
 import org.lessons.java.spring_la_mia_pizzeria_crud.repository.OfferRepository;
 import org.lessons.java.spring_la_mia_pizzeria_crud.repository.PizzasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,8 @@ public class PizzasController {
     private PizzasRepository repository;
     @Autowired
     private OfferRepository offerRepository;
+    @Autowired
+    private IngredientRepository ingredientRepository;
 
     @GetMapping
     public String index (Model model) {
@@ -65,14 +68,16 @@ public class PizzasController {
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("pizza", new Pizza());
-        return "pizzas/create";
+        model.addAttribute("ingredients", ingredientRepository.findAll());
+        return "pizzas/create-or-edit";
     }
 
     @PostMapping("/create")
     public String store(@Valid @ModelAttribute("pizza") Pizza formPizza, BindingResult bindingResult , Model model) {
 
         if (bindingResult.hasErrors()){
-            return "pizzas/create";
+            model.addAttribute("ingredients", ingredientRepository.findAll());
+            return "pizzas/create-or-edit";
         }
 
         repository.save(formPizza);
@@ -83,13 +88,17 @@ public class PizzasController {
     @GetMapping("/edit/{id}")
     public String edit(@PathVariable("id") Integer id, Model model) {
         model.addAttribute("pizza", repository.findById(id).get());
-        return "pizzas/edit";
+        model.addAttribute("ingredients", ingredientRepository.findAll());
+        model.addAttribute("edit", true);
+        return "pizzas/create-or-edit";
     }
 
     @PostMapping("/edit/{id}")
     public String update(@Valid @ModelAttribute("pizza") Pizza formPizza, BindingResult bindingResult , Model model) {
         if (bindingResult.hasErrors()){
-            return "pizzas/edit";
+            model.addAttribute("ingredients", ingredientRepository.findAll());
+            model.addAttribute("edit", true);
+        return "pizzas/create-or-edit";
         }
 
         repository.save(formPizza);
@@ -110,7 +119,7 @@ public class PizzasController {
     }
 
     @GetMapping("/{id}/offers")
-    public String create(@PathVariable("id") Integer id, Model model) {
+    public String createOffer(@PathVariable("id") Integer id, Model model) {
 
         Offer offer = new Offer();
         offer.setPizza(repository.findById(id).get());

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/webjars/font-awesome/7.0.0/css/all.min.css}"
+    />
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <title>La mia pizzeria</title>
+  </head>
+  <body>
+    <header class="pb-3">
+      <div th:insert="pizzas/index :: navbar"></div>
+    </header>
+    <main>
+      <div class="container">
+        <div class="py-3">
+          <h2 class="text-center">Ingredienti</h2>
+          <a th:href="@{/ingredients/create}" class="btn btn-primary"
+            >Aggiungi un nuovo ingrediente</a
+          >
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nome</th>
+                  <th>Pizze contenenti questo ingrediente</th>
+                  <th></th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  th:each="ingredient : ${ingredients}"
+                  th:object="${ingredient}"
+                >
+                  <td th:text="*{id}"></td>
+                  <td th:text="*{name}"></td>
+                  <td th:text="*{pizzas.size()}"></td>
+                  <td>
+                    <a
+                      class="btn btn-success"
+                      th:href="@{|/ingredients/edit/${ingredient.id}|}"
+                    >
+                      <i class="fa fa-pen"></i>
+                    </a>
+                  </td>
+                  <td>
+                    <form
+                      method="post"
+                      th:action="@{|/ingredients/delete/${ingredient.id}|}"
+                    >
+                      <!-- <button class="btn btn-danger">
+                      <i class="fa fa-trash"></i>
+                    </button> -->
+                      <button
+                        type="button"
+                        class="btn btn-danger"
+                        data-bs-toggle="modal"
+                        th:attr="data-bs-target='#modal-delete-' + ${ingredient.id}"
+                      >
+                        <i class="fa fa-trash"></i>
+                      </button>
+
+                      <!-- Modal -->
+                      <div
+                        class="modal fade"
+                        th:id="'modal-delete-' + ${ingredient.id}"
+                        tabindex="-1"
+                        aria-labelledby="exampleModalLabel"
+                        aria-hidden="true"
+                      >
+                        <div class="modal-dialog">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h1
+                                class="modal-title fs-5"
+                                id="exampleModalLabel"
+                              >
+                                Conferma eliminazione ingrediente
+                              </h1>
+                              <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                              ></button>
+                            </div>
+                            <div class="modal-body">
+                              Sei sicuro di voler eliminare questo ingrediente?
+                            </div>
+                            <div class="modal-footer">
+                              <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-bs-dismiss="modal"
+                              >
+                                Annulla
+                              </button>
+                              <button type="submit" class="btn btn-danger">
+                                Elimina
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+    <div th:insert="pizzas/index :: bs-script"></div>
+  </body>
+</html>

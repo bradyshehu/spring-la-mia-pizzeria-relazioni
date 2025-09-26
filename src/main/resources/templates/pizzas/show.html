@@ -26,6 +26,16 @@
           <li class="py-3" th:text="*{description}"></li>
           <li class="py-3" th:text="*{price} + '€'"></li>
         </ul>
+        <section class="ingredients text-start">
+          <h3>Ingredienti</h3>
+          <ul class="list-group">
+            <li
+              class="list-group-item"
+              th:each="ingredient : *{ingredients}"
+              th:text="${ingredient.name}"
+            ></li>
+          </ul>
+        </section>
 
         <section class="row justify-content-center py-5 text-start">
           <div class="col-12">
@@ -51,6 +61,7 @@
                     <th>Data fine</th>
                     <th>Percentuale di sconto</th>
                     <th></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -70,7 +81,7 @@
                     <td>
                       <form
                         method="post"
-                        th:action="@{'/offers/delete/' + ${offer.id}}"
+                        th:action="@{|/offers/delete/${offer.id}}|"
                       >
                         <!-- <button class="btn btn-danger">
                       <i class="fa fa-trash"></i>
@@ -136,8 +147,6 @@
         </section>
       </div>
     </main>
-    <script
-      th:src="@{/webjars/bootstrap/5.3.8/js/bootstrap.bundle.min.js}"
-    ></script>
+    <div th:insert="pizzas/index :: bs-script"></div>
   </body>
 </html>
